@@ -68,15 +68,15 @@ But in JS, these are actually just built-in functions. Each of these built-in fu
 
 ```js
 var strPrimitive = "I am a string";
-typeof strPrimitive; // "string"
-strPrimitive instanceof String; // false
+typeof strPrimitive;							// "string"
+strPrimitive instanceof String;					// false
 
 var strObject = new String( "I am a string" );
-typeof strObject; // "object"
-strObject instanceof String; // true
+typeof strObject; 								// "object"
+strObject instanceof String;					// true
 
 // inspect the object sub-type
-Object.prototype.toString.call( strObject ); // [object String]
+Object.prototype.toString.call( strObject );	// [object String]
 ```
 
 We'll see in detail in a later chapter exactly how the `Object.prototype.toString...` bit works, but briefly, we can inspect the internal sub-type by borrowing the base default `toString()` method, and you can see it reveals that `strObject` is an object that was in fact created by the `String` constructor.
@@ -90,9 +90,9 @@ Consider:
 ```js
 var strPrimitive = "I am a string";
 
-console.log( strPrimitive.length ); // 13
+console.log( strPrimitive.length );			// 13
 
-console.log( strPrimitive.charAt( 3 ) ); // "m"
+console.log( strPrimitive.charAt( 3 ) );	// "m"
 ```
 
 In both cases, we call a property or method on a string primitive, and the engine automatically coerces it to a `String` object, so that the property/method access works.
@@ -118,9 +118,9 @@ var myObject = {
 	a: 2
 };
 
-myObject.a; // 2
+myObject.a;		// 2
 
-myObject["a"]; // 2
+myObject["a"];	// 2
 ```
 
 To access the value at the *location* `a` in `myObject`, we need to use either the `.` operator or the `[ ]` operator. The `.a` syntax is usually referred to as "property" access, whereas the `["a"]` syntax is usually referred to as "key" access. In reality, they both access the same *location*, and will pull out the same value, `2`, so the terms can be used interchangeably. We will use the most common term, "property access" from here on.
@@ -154,9 +154,9 @@ myObject[true] = "foo";
 myObject[3] = "bar";
 myObject[myObject] = "baz";
 
-myObject["true"]; // "foo"
-myObject["3"]; // "bar"
-myObject["[object Object]"]; // "baz"
+myObject["true"];				// "foo"
+myObject["3"];					// "bar"
+myObject["[object Object]"];	// "baz"
 ```
 
 ### Computed Property Names
@@ -204,17 +204,17 @@ function foo() {
 	console.log( "foo" );
 }
 
-var someFoo = foo; // variable reference to `foo`
+var someFoo = foo;	// variable reference to `foo`
 
 var myObject = {
 	someFoo: foo
 };
 
-foo; // function foo(){..}
+foo;				// function foo(){..}
 
-someFoo; // function foo(){..}
+someFoo;			// function foo(){..}
 
-myObject.someFoo; // function foo(){..}
+myObject.someFoo;	// function foo(){..}
 ```
 
 `someFoo` and `myObject.someFoo` are just two separate references to the same function, and neither implies anything about the function being special or "owned" by any other object. If `foo()` above was defined to have a `this` reference inside it, that `myObject.someFoo` *implicit binding* would be the **only** observable difference between the two references. Neither reference really makes sense to be called a "method".
@@ -229,19 +229,19 @@ Even when you declare a function expression as part of the object-literal, that 
 
 ```js
 var myObject = {
-	foo: function() {
+	foo: function foo() {
 		console.log( "foo" );
 	}
 };
 
 var someFoo = myObject.foo;
 
-someFoo; // function foo(){..}
+someFoo;		// function foo(){..}
 
-myObject.foo; // function foo(){..}
+myObject.foo;	// function foo(){..}
 ```
 
-**Note:** In Chapter 6, we will cover an ES6 short-hand for that `foo: function(){ .. }` declaration syntax in our object-literal.
+**Note:** In Chapter 6, we will cover an ES6 short-hand for that `foo: function foo(){ .. }` declaration syntax in our object-literal.
 
 ### Arrays
 
@@ -250,11 +250,11 @@ Arrays also use the `[ ]` access form, but as mentioned above, they have slightl
 ```js
 var myArray = [ "foo", 42, "bar" ];
 
-myArray.length; // 3
+myArray.length;		// 3
 
-myArray[0]; // "foo"
+myArray[0];			// "foo"
 
-myArray[2]; // "bar"
+myArray[2];			// "bar"
 ```
 
 Arrays *are* objects, so even though each index is a positive integer, you can *also* add properties onto the array:
@@ -264,9 +264,9 @@ var myArray = [ "foo", 42, "bar" ];
 
 myArray.baz = "baz";
 
-myArray.length; // 3
+myArray.length;	// 3
 
-myArray.baz; // "baz"
+myArray.baz;	// "baz"
 ```
 
 Notice that adding named properties (regardless of `.` or `[ ]` operator syntax) does not change the reported `length` of the array.
@@ -280,9 +280,9 @@ var myArray = [ "foo", 42, "bar" ];
 
 myArray["3"] = "baz";
 
-myArray.length; // 4
+myArray.length;	// 4
 
-myArray[3]; // "baz"
+myArray[3];		// "baz"
 ```
 
 ### Duplicating Objects
@@ -302,8 +302,8 @@ var anotherArray = [];
 
 var myObject = {
 	a: 2,
-	b: anotherObject, // reference, not a copy!
-	c: anotherArray, // another reference!
+	b: anotherObject,	// reference, not a copy!
+	c: anotherArray,	// another reference!
 	d: anotherFunction
 };
 
@@ -333,10 +333,10 @@ At the same time, a shallow copy is fairly understandable and has far less issue
 ```js
 var newObj = Object.assign( {}, myObject );
 
-newObj.a; // 2
-newObj.b === anotherObject; // true
-newObj.c === anotherArray; // true
-newObj.d === anotherFunction; // true
+newObj.a;						// 2
+newObj.b === anotherObject;		// true
+newObj.c === anotherArray;		// true
+newObj.d === anotherFunction;	// true
 ```
 
 **Note:** In the next section, we describe "property descriptors" (property characteristics) and show the use of `Object.defineProperty(..)`. The duplication that occurs for `Object.assign(..)` however is purely `=` style assignment, so any special characteristics of a property (like `writable`) on a source object **are not preserved** on the target object.
@@ -424,7 +424,7 @@ myObject.a = 3; // TypeError
 
 The `TypeError` tells us we cannot change a non-writable property.
 
-**Note:** We will discuss getters/setters shortly, but briefly, you can observe that `writable:false` means a value cannot be changed, which is somewhat equivalent to if you defined a no-op setter. Actually, your no-op setter would need throw a `TypeError` when called, to be truly conformant to `writable:false`.
+**Note:** We will discuss getters/setters shortly, but briefly, you can observe that `writable:false` means a value cannot be changed, which is somewhat equivalent to if you defined a no-op setter. Actually, your no-op setter would need to throw a `TypeError` when called, to be truly conformant to `writable:false`.
 
 #### Configurable
 
@@ -436,18 +436,18 @@ var myObject = {
 };
 
 myObject.a = 3;
-myObject.a; // 3
+myObject.a;					// 3
 
 Object.defineProperty( myObject, "a", {
 	value: 4,
 	writable: true,
-	configurable: false, // not configurable!
+	configurable: false,	// not configurable!
 	enumerable: true
 } );
 
-myObject.a; // 4
+myObject.a;					// 4
 myObject.a = 5;
-myObject.a; // 5
+myObject.a;					// 5
 
 Object.defineProperty( myObject, "a", {
 	value: 6,
@@ -468,9 +468,9 @@ var myObject = {
 	a: 2
 };
 
-myObject.a; // 2
+myObject.a;				// 2
 delete myObject.a;
-myObject.a; // undefined
+myObject.a;				// undefined
 
 Object.defineProperty( myObject, "a", {
 	value: 2,
@@ -479,9 +479,9 @@ Object.defineProperty( myObject, "a", {
 	enumerable: true
 } );
 
-myObject.a; // 2
+myObject.a;				// 2
 delete myObject.a;
-myObject.a; // 2
+myObject.a;				// 2
 ```
 
 As you can see, the last `delete` call failed (silently) because we made the `a` property non-configurable.
@@ -630,7 +630,7 @@ The default `[[Put]]` and `[[Get]]` operations for objects completely control ho
 
 ES5 introduced a way to override part of these default operations, not on an object level but a per-property level, through the use of getters and setters. Getters are properties which actually call a hidden function to retrieve a value. Setters are properties which actually call a hidden function to set a value.
 
-When you define a property to have either a getter or a setter or both, its definition becomes an "accessor descriptor" (as opposed to a "data descriptor"). For accessor-desciptors, the `value` and `writable` characteristics of the descriptor are moot and ignored, and instead JS considers the `set` and `get` characteristics of the property (as well as `configurable` and `enumerable`).
+When you define a property to have either a getter or a setter or both, its definition becomes an "accessor descriptor" (as opposed to a "data descriptor"). For accessor-descriptors, the `value` and `writable` characteristics of the descriptor are moot and ignored, and instead JS considers the `set` and `get` characteristics of the property (as well as `configurable` and `enumerable`).
 
 Consider:
 
@@ -709,11 +709,11 @@ var myObject = {
 	a: 2
 };
 
-("a" in myObject); // true
-("b" in myObject); // false
+("a" in myObject);				// true
+("b" in myObject);				// false
 
-myObject.hasOwnProperty( "a" ); // true
-myObject.hasOwnProperty( "b" ); // false
+myObject.hasOwnProperty( "a" );	// true
+myObject.hasOwnProperty( "b" );	// false
 ```
 
 The `in` operator will check to see if the property is *in* the object, or if it exists at any higher level of the `[[Prototype]]` chain object traversal (see Chapter 5). By contrast, `hasOwnProperty(..)` checks to see if *only* `myObject` has the property or not, and will *not* consult the `[[Prototype]]` chain. We'll come back to the important differences between these two operations in the Chapter 5 when we explore `[[Prototype]]`s in detail.
