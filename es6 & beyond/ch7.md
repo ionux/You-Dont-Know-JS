@@ -1,7 +1,7 @@
 # You Don't Know JS: ES6 & Beyond
 # Chapter 7: Meta Programming
 
-Meta Programming is programming where the operation targets the behavior of the program itself. In other words, it's programming the programming of your program. Yeah, a mouthful, huh!?
+Meta programming is programming where the operation targets the behavior of the program itself. In other words, it's programming the programming of your program. Yeah, a mouthful, huh?
 
 For example, if you probe the relationship between one object `a` and another `b` -- are they `[[Prototype]]` linked? -- using `a.isPrototype(b)`, this is commonly referred to as introspection, a form of meta programming. Macros (which don't exist in JS, yet) --  where the code modifies itself at compile time -- are another obvious example of meta programming. Enumerating the keys of an object with a `for..in` loop, or checking if an object is an *instance of* a "class constructor", are other common meta programming tasks.
 
@@ -63,7 +63,7 @@ function foo(i) {
 
 The `name` property is what you'd use for meta programming purposes, so that's what we'll focus on in this discussion.
 
-The confusion comes because by default, the lexical name a function has (if any) is also set as its `name` property. Actually there was no official requirement for that behavior by the ES5 (and prior) specifications. The setting of the `name` property was non-standard but still fairly reliable. As of ES6, it has been standardized.
+The confusion comes because by default, the lexical name a function has (if any) is also set as its `name` property. Actually there was no official requirement for that behavior by the ES5 (and prior) specifications. The setting of the `name` property was nonstandard but still fairly reliable. As of ES6, it has been standardized.
 
 **Tip:** If a function has a `name` value assigned, that's typically the name used in stack traces in developer tools.
 
@@ -85,7 +85,7 @@ abc.name;				// "abc"
 
 Had we given the function a lexical name like `abc = function def() { .. }`, the `name` property would of course be `"def"`. But in the absence of the lexical name, intuitively the `"abc"` name seems appropriate.
 
-Here are other forms which will infer a name (or not) in ES6:
+Here are other forms that will infer a name (or not) in ES6:
 
 ```js
 (function(){ .. });					// name:
@@ -127,13 +127,13 @@ The `name` property is not writable by default, but it is configurable, meaning 
 
 ## Meta Properties
 
-In Chapter 3 "`new.target`", we introduced a concept new to JS in ES6: the meta property. As the name suggests, meta properties are intended to provide special meta information in the form of a property access that would otherwise not have been possible.
+In the "`new.target`" section of Chapter 3, we introduced a concept new to JS in ES6: the meta property. As the name suggests, meta properties are intended to provide special meta information in the form of a property access that would otherwise not have been possible.
 
 In the case of `new.target`, the keyword `new` serves as the context for a property access. Clearly `new` is itself not an object, which makes this capability special. However, when `new.target` is used inside a constructor call (a function/method invoked with `new`), `new` becomes a virtual context, so that `new.target` can refer to the target constructor that `new` invoked.
 
 This is a clear example of a meta programming operation, as the intent is to determine from inside a constructor call what the original `new` target was, generally for the purposes of introspection (examining typing/structure) or static property access.
 
-For example, you may want to have different behavior in a constructor depending on if its directly invoked or invoked via a child class:
+For example, you may want to have different behavior in a constructor depending on if it's directly invoked or invoked via a child class:
 
 ```js
 class Parent {
@@ -162,7 +162,7 @@ There's a slight nuance here, which is that the `constructor()` inside the `Pare
 
 ## Well Known Symbols
 
-In Chapter 2 "Symbols", we covered the new ES6 primitive type `symbol`. In addition to symbols you can define in your own program, JS pre-defines a number of built-in symbols, referred to as *well known symbols* (WKS).
+In the "Symbols" section of Chapter 2, we covered the new ES6 primitive type `symbol`. In addition to symbols you can define in your own program, JS predefines a number of built-in symbols, referred to as *Well Known Symbols* (WKS).
 
 These symbol values are defined primarily to expose special meta properties that are being exposed to your JS programs to give you more control over JS's behavior.
 
@@ -247,7 +247,7 @@ The `@@toStringTag` symbol on the prototype (or instance itself) specifies a str
 
 The `@@hasInstance` symbol is a method on the constructor function which receives the instance object value and lets you decide by returning `true` or `false` if the value should be considered an instance or not.
 
-**Note:** To set `@@hasInstance` on a function, you must use `Object.defineProperty(..)`, since the default one on `Function.prototype` is `writable: false`. See the *this & Object Prototypes* title of this series for more information.
+**Note:** To set `@@hasInstance` on a function, you must use `Object.defineProperty(..)`, as the default one on `Function.prototype` is `writable: false`. See the *this & Object Prototypes* title of this series for more information.
 
 ### `Symbol.species`
 
@@ -284,7 +284,7 @@ d instanceof Awesome;		// false
 d instanceof Cool;			// true
 ```
 
-The `Symbol.species` setting defaults on the built-in native constructors to the `return this` behavior as illustrated in the previous snippet in the `Cool` definition. It has no default on user classes, but as shown that behaivor is easy to emulate.
+The `Symbol.species` setting defaults on the built-in native constructors to the `return this` behavior as illustrated in the previous snippet in the `Cool` definition. It has no default on user classes, but as shown that behavior is easy to emulate.
 
 If you need to define methods that generate new instances, use the meta programming of the `new this.constructor[Symbol.species](..)` pattern instead of the hard-wiring of `new this.constructor(..)` or `new XYZ(..)`. Derived classes will then be able to customize `Symbol.species` to control which constructor vends those instances.
 
@@ -292,7 +292,7 @@ If you need to define methods that generate new instances, use the meta programm
 
 In the *Types & Grammar* title of this series, we discussed the `ToPrimitive` abstract coercion operation, which is used when an object must be coerced to a primitive value for some operation (such as `==` comparison or `+` addition). Prior to ES6, there was no way to control this behavior.
 
-As of ES6, the `@@toPrimitive` symbol as a property on any object value can customize that `ToPrimitve` coercion by specifying a method.
+As of ES6, the `@@toPrimitive` symbol as a property on any object value can customize that `ToPrimitive` coercion by specifying a method.
 
 Consider:
 
@@ -378,7 +378,7 @@ with (o) {
 
 A `true` in the `@@unscopables` object indicates the property should be *unscopable*, and thus filtered out from the lexical scope variables. `false` means it's OK to be included in the lexical scope variables.
 
-**Warning:** The `with` statement is disallowed entirely in `strict` mode, and as such should be considered deprecated from the language. Don't use it. See the *Scope & Closures* title of this series for more information. Since `with` should be avoided, the `@@unscopables` symbol is also moot.
+**Warning:** The `with` statement is disallowed entirely in `strict` mode, and as such should be considered deprecated from the language. Don't use it. See the *Scope & Closures* title of this series for more information. Because `with` should be avoided, the `@@unscopables` symbol is also moot.
 
 ## Proxies
 
@@ -433,9 +433,9 @@ Here's a list of handlers you can define on a proxy for a *target* object/functi
 * `enumerate(..)`: via `[[Enumerate]]`, an iterator is requested for the proxy's enumerable owned and "inherited" properties (`Reflect.enumerate(..)` or `for..in`)
 * `has(..)`: via `[[HasProperty]]`, the proxy is probed to see if it has an owned or "inherited" property (`Reflect.has(..)`, `Object#hasOwnProperty(..)`, or `"prop" in obj`)
 
-**Tip:** For more information about each of these meta programming tasks, see the "Reflect" section below.
+**Tip:** For more information about each of these meta programming tasks, see the "`Reflect` API" section later in this chapter.
 
-In addition to the notations in the above list about actions that will trigger the various traps, some traps are triggered indirectly by the default actions of another trap. For example:
+In addition to the notations in the preceding list about actions that will trigger the various traps, some traps are triggered indirectly by the default actions of another trap. For example:
 
 ```js
 var handlers = {
@@ -487,7 +487,7 @@ Perhaps in the future, more of these underlying fundamental operations in the la
 
 ### Revocable Proxies
 
-A regular proxy always traps for the target object, and cannot be modified after creation -- as long as a reference is kept to the proxy, proxying remains possible. However, there may be cases where you want to create a proxy that can be used only for a certain period of time and then disabled. The solution is to create a *revocable proxy*:
+A regular proxy always traps for the target object, and cannot be modified after creation -- as long as a reference is kept to the proxy, proxying remains possible. However, there may be cases where you want to create a proxy that can be disabled when you want to stop allowing it to proxy. The solution is to create a *revocable proxy*:
 
 ```js
 var obj = { a: 1 },
@@ -519,15 +519,17 @@ The return value of `Proxy.revocable(..)` is not the proxy itself as with `new P
 
 Once a revocable proxy is revoked, any attempts to access it (trigger any of its traps) will throw a `TypeError`.
 
+An example of using a revocable proxy might be handing out a proxy to another party in your application that manages data in your model, instead of giving them a reference to the real model object itself. If your model object changes or is replaced, you want to invalidate the proxy you handed out so the other party knows (via the errors!) to request an updated reference to the model.
+
 ### Using Proxies
 
 The meta programming benefits of these Proxy handlers should be obvious. We can almost fully intercept (and thus override) the behavior of objects, meaning we can extend object behavior beyond core JS in some very powerful ways. We'll look at a few example patterns to explore the possibilities.
 
 #### Proxy First, Proxy Last
 
-As we mentioned earlier, you typically think of a proxy as "wrapping" the target object. In that sense, the proxy becomes the primary object that the  code interfaces with, and the actual target object remains hidden/protected.
+As we mentioned earlier, you typically think of a proxy as "wrapping" the target object. In that sense, the proxy becomes the primary object that the code interfaces with, and the actual target object remains hidden/protected.
 
-You might do this because you want to pass the object somewhere that can't be fully "trusted", and so you need to enforce special rules around its access rather than passing the object itself.
+You might do this because you want to pass the object somewhere that can't be fully "trusted," and so you need to enforce special rules around its access rather than passing the object itself.
 
 Consider:
 
@@ -559,7 +561,7 @@ var messages = [],
 		}
 	},
 	messages_proxy =
-		new Proxy( results, handlers );
+		new Proxy( messages, handlers );
 
 // elsewhere:
 messages_proxy.push(
@@ -577,11 +579,11 @@ messages.forEach( function(val){
 // hello... world!!
 ```
 
-I call this *proxy first* design since we interact first (primarily, entirely) with the proxy.
+I call this *proxy first* design, as we interact first (primarily, entirely) with the proxy.
 
 We enforce some special rules on interacting with `messages_proxy` that aren't enforced for `messages` itself. We only add elements if the value is a string and is also unique; we also lowercase the value. When retrieving values from `messages_proxy`, we filter out any punctuation in the strings.
 
-Alternately, we can completely invert this pattern, where the target interacts with the proxy instead of the proxy interacting with the target. Thus, code really only interacts with the main object. The easiest way to accomplish this fallback is to have the proxy object in the `[[Prototype]]` chain of the main object.
+Alternatively, we can completely invert this pattern, where the target interacts with the proxy instead of the proxy interacting with the target. Thus, code really only interacts with the main object. The easiest way to accomplish this fallback is to have the proxy object in the `[[Prototype]]` chain of the main object.
 
 Consider:
 
@@ -609,15 +611,15 @@ greeter.speak( "world" );		// hello world
 greeter.everyone();				// hello everyone!
 ```
 
-We interact directly with `greeter` instead of `catchall`. When we call `speak(..)`, it's found on `greeter` and used directly. But when we try to access a method like `everyone()`, that function doesn't exist on `person`.
+We interact directly with `greeter` instead of `catchall`. When we call `speak(..)`, it's found on `greeter` and used directly. But when we try to access a method like `everyone()`, that function doesn't exist on `greeter`.
 
 The default object property behavior is to check up the `[[Prototype]]` chain (see the *this & Object Prototypes* title of this series), so `catchall` is consulted for an `everyone` property. The proxy `get()` handler then kicks in and returns a function that calls `speak(..)` with the name of the property being accessed (`"everyone"`).
 
-I call this pattern *proxy last*, since the proxy is used only as a last resort.
+I call this pattern *proxy last*, as the proxy is used only as a last resort.
 
 #### "No Such Property/Method"
 
-A common complaint about JS is that objects aren't by default very defensive in the situation where you try to access or set a property that doesn't already exist. You way wish to pre-define all the properties/methods for an object, and have an error thrown if a non-existent property name is subsequently used.
+A common complaint about JS is that objects aren't by default very defensive in the situation where you try to access or set a property that doesn't already exist. You may wish to predefine all the properties/methods for an object, and have an error thrown if a nonexistent property name is subsequently used.
 
 We can accomplish this with a proxy, either in *proxy first* or *proxy last* design. Let's consider both.
 
@@ -692,7 +694,7 @@ obj.bar();			// Error: No such property/method!
 
 The *proxy last* design here is a fair bit simpler with respect to how the handlers are defined. Instead of needing to intercept the `[[Get]]` and `[[Set]]` operations and only forward them if the target property exists, we instead rely on the fact that if either `[[Get]]` or `[[Set]]` get to our `pobj` fallback, the action has already traversed the whole `[[Prototype]]` chain and not found a matching property. We are free at that point to unconditionally throw the error. Cool, huh?
 
-#### Proxy Hacking The `[[Prototype]]` Chain
+#### Proxy Hacking the `[[Prototype]]` Chain
 
 The `[[Get]]` operation is the primary channel by which the `[[Prototype]]` mechanism is invoked. When a property is not found on the immediate object, `[[Get]]` automatically hands off the operation to the `[[Prototype]]` object.
 
@@ -759,7 +761,7 @@ In the previous snippet, `obj2` is `[[Prototype]]` linked to `obj1` by virtue of
 
 Then, the proxy's `get(..)` handler looks first to see if a requested `key` is on the proxy. If not, the operation is manually handed off to the object reference stored in the `Symbol.for("[[Prototype]]")` location of `target`.
 
-One important plus of this pattern is that the definitions of `obj1` and `obj2` are mostly not intruded by the setting up of this circular relationship between them. Though the previous snippet has all the steps intertwined for brevity sake, if you look closely, the proxy handler logic is entirely generic (doesn't know about `obj1` or `obj2` specifically). So, that logic could be pulled out into a simple helper that wires them up, like a `setCircularPrototypeOf(..)` for example. We'll leave that as an exercise for the reader.
+One important advantage of this pattern is that the definitions of `obj1` and `obj2` are mostly not intruded by the setting up of this circular relationship between them. Although the previous snippet has all the steps intertwined for brevity's sake, if you look closely, the proxy handler logic is entirely generic (doesn't know about `obj1` or `obj2` specifically). So, that logic could be pulled out into a simple helper that wires them up, like a `setCircularPrototypeOf(..)` for example. We'll leave that as an exercise for the reader.
 
 Now that we've seen how we can use `get(..)` to emulate a `[[Prototype]]` link, let's push the hackery a bit further. Instead of a circular `[[Prototype]]`, what about multiple `[[Prototype]]` linkages (aka "multiple inheritance")? This turns out to be fairly straightforward:
 
@@ -821,7 +823,7 @@ obj3.baz();
 // obj2.bar: obj-3
 ```
 
-**Note:** As mentioned in the note after the earlier circular `[[Prototype]]` example, we didn't implement the `set(..)` handler, but it would be necessary for a complete solution that emulates `[[Set]]` actions as normal `[[Prototype]]`'s behave.
+**Note:** As mentioned in the note after the earlier circular `[[Prototype]]` example, we didn't implement the `set(..)` handler, but it would be necessary for a complete solution that emulates `[[Set]]` actions as normal `[[Prototype]]`s behave.
 
 `obj3` is set up to multiple-delegate to both `obj1` and `obj2`. In `obj3.baz()`, the `this.foo()` call ends up pulling `foo()` from `obj1` (first-come, first-served, even though there's also a `foo()` on `obj2`). If we reordered the linkage as `obj2, obj1`, the `obj2.foo()` would have been found and used.
 
@@ -852,9 +854,9 @@ These utilities in general behave the same as their `Object.*` counterparts. How
 
 An object's keys can be accessed/inspected using these utilities:
 
-* `Reflect.ownKeys(..)`: returns the list of all owned keys (not "inherited"), as returned by both `Object.getOwnPropertyNames(..)` and `Object.getOwnPropertySymbols(..)`. See the "Property Enumeration Order" section for information about the order of keys.
-* `Reflect.enumerate(..)`: returns an iterator that produces the set of all non-symbol keys (owned and "inherited") that are *enumerable* (see the *this & Object Prototypes* title of this series). Essentially, this set of keys is the same as those processed by a `for..in` loop. See the "Property Enumeration Order" section for information about the order of keys.
-* `Reflect.has(..)`: essentially the same as the `in` operator for checking if a property is on an object or its `[[Prototype]]` chain. For example, `Reflect.has(o,"foo")` essentially performs `"foo" in o`.
+* `Reflect.ownKeys(..)`: Returns the list of all owned keys (not "inherited"), as returned by both `Object.getOwnPropertyNames(..)` and `Object.getOwnPropertySymbols(..)`. See the "Property Enumeration Order" section for information about the order of keys.
+* `Reflect.enumerate(..)`: Returns an iterator that produces the set of all non-symbol keys (owned and "inherited") that are *enumerable* (see the *this & Object Prototypes* title of this series). Essentially, this set of keys is the same as those processed by a `for..in` loop. See the "Property Enumeration Order" section for information about the order of keys.
+* `Reflect.has(..)`: Essentially the same as the `in` operator for checking if a property is on an object or its `[[Prototype]]` chain. For example, `Reflect.has(o,"foo")` essentially performs `"foo" in o`.
 
 Function calls and constructor invocations can be performed manually, separate of the normal syntax (e.g., `(..)` and `new`) using these utilities:
 
@@ -867,7 +869,7 @@ Object property access, setting, and deletion can be performed manually using th
 * `Reflect.set(..)`: For example, `Reflect.set(o,"foo",42)` essentially performs `o.foo = 42`.
 * `Reflect.deleteProperty(..)`: For example, `Reflect.deleteProperty(o,"foo")` essentially performs `delete o.foo`.
 
-The meta programming capabilities of `Reflect` give you programmtic equivalents to emulate various syntactic features, exposing previously hidden-only abstract operations. For example, you can use these capabilities to extend features and APIs for *domain specific languages* (DSLs).
+The meta programming capabilities of `Reflect` give you programmatic equivalents to emulate various syntactic features, exposing previously hidden-only abstract operations. For example, you can use these capabilities to extend features and APIs for *domain specific languages* (DSLs).
 
 ### Property Ordering
 
@@ -879,7 +881,7 @@ The ordering is:
 
 1. First, enumerate any owned properties that are integer indexes, in ascending numeric order.
 2. Next, enumerate the rest of the owned string property names in creation order.
-3. Finally, enumerate owned symbol properities in creation order.
+3. Finally, enumerate owned symbol properties in creation order.
 
 Consider:
 
@@ -899,9 +901,9 @@ Object.getOwnPropertySymbols( o );	// [Symbol(c)]
 
 On the other hand, the `[[Enumerate]]` algorithm (ES6 specification, section 9.1.11) produces only enumerable properties, from the target object as well as its `[[Prototype]]` chain. It is used by both `Reflect.enumerate(..)` and `for..in`. The observable ordering is implementation dependent and not controlled by the specification.
 
-By contrast, `Object.keys(..)` invokes the `[[OwnPropertyKeys]]` algorithm to get a list of all owned keys. However, it filters out non-enumerable properties and then reorders the list to match legacy implementation dependent behavior, specifically with `JSON.stringify(..)` and `for..in`. So, by extension the ordering *also* matches that of `Reflect.enumerate(..)`.
+By contrast, `Object.keys(..)` invokes the `[[OwnPropertyKeys]]` algorithm to get a list of all owned keys. However, it filters out non-enumerable properties and then reorders the list to match legacy implementation-dependent behavior, specifically with `JSON.stringify(..)` and `for..in`. So, by extension the ordering *also* matches that of `Reflect.enumerate(..)`.
 
-In other words, all four mechanisms (`Reflect.enumerate(..)`, `Object.keys(..)`, `for..in`, and `JSON.stringify(..)`) will  match with the same implementation dependent ordering, though they technically get there in different ways.
+In other words, all four mechanisms (`Reflect.enumerate(..)`, `Object.keys(..)`, `for..in`, and `JSON.stringify(..)`) will  match with the same implementation-dependent ordering, though they technically get there in different ways.
 
 Implementations are allowed to match these four to the ordering of `[[OwnPropertyKeys]]`, but are not required to. Nevertheless, you will likely observe the following ordering behavior from them:
 
@@ -930,7 +932,7 @@ Object.keys( p );
 
 Boiling this all down: as of ES6, `Reflect.ownKeys(..)`, `Object.getOwnPropertyNames(..)`, and `Object.getOwnPropertySymbols(..)` all have predictable and reliable ordering guaranteed by the specification. So it's safe to build code that relies on this ordering.
 
-`Reflect.enumerate(..)`, `Object.keys(..)`, and `for..in` (as well as `JSON.stringification(..)` by extension) continue to share an observable ordering with each other, as they always have. But that ordering will not necessarily be the same as that of `Reflect.ownKeys(..)`. Care should still be taken in relying on their implementation dependent ordering.
+`Reflect.enumerate(..)`, `Object.keys(..)`, and `for..in` (as well as `JSON.stringification(..)` by extension) continue to share an observable ordering with each other, as they always have. But that ordering will not necessarily be the same as that of `Reflect.ownKeys(..)`. Care should still be taken in relying on their implementation-dependent ordering.
 
 ## Feature Testing
 
@@ -988,13 +990,13 @@ OK, so now we're meta programming by determining if a feature like arrow functio
 
 With existence checks for APIs, and defining fallback API polyfills, there's a clear path for what to do with either test success or failure. But what can we do with the information that we get from `ARROW_FUNCS_ENABLED` being `true` or `false`?
 
-Since the syntax can't appear in a file if the engine doesn't support that feature, you can't just have different functions defined in the file with and without the syntax in question.
+Because the syntax can't appear in a file if the engine doesn't support that feature, you can't just have different functions defined in the file with and without the syntax in question.
 
 What you can do is use the test to determine which of a set of JS files you should load. For example, if you had a set of these feature tests in a bootstrapper for your JS application, it could then test the environment to determine if your ES6 code can be loaded and run directly, or if you need to load a transpiled version of your code (see Chapter 1).
 
 This technique is called *split delivery*.
 
-It recognizes the reality that your ES6 authored JS programs will sometimes be able to entirely run "natively" in ES6+ browsers, but other times need transpilation to run in pre-ES6 browsers. If you always load and use the transpiled code, even in the new ES6-compliant environments, you're running sub-optimal code at least some of the time. This is not ideal.
+It recognizes the reality that your ES6 authored JS programs will sometimes be able to entirely run "natively" in ES6+ browsers, but other times need transpilation to run in pre-ES6 browsers. If you always load and use the transpiled code, even in the new ES6-compliant environments, you're running suboptimal code at least some of the time. This is not ideal.
 
 Split delivery is more complicated and sophisticated, but it represents a more mature and robust approach to bridging the gap between the code you write and the feature support in browsers your programs must run in.
 
@@ -1008,7 +1010,7 @@ Finally, managing the list of feature tests that apply to your specific code bas
 
 The "https://featuretests.io" feature-tests-as-a-service offers solutions to these frustrations.
 
-You can load the service's library into your page, and it loads the latest test definitions and runs all the feature tests. It does so using background-processing with Web Workers, if possible, to reduce the performance overhead. It also uses LocalStorage persistence to cache the results in a way that can be shared across all sites you visit which use the service, which drastically reduces how often the tests need to run on each browser instance.
+You can load the service's library into your page, and it loads the latest test definitions and runs all the feature tests. It does so using background processing with Web Workers, if possible, to reduce the performance overhead. It also uses LocalStorage persistence to cache the results in a way that can be shared across all sites you visit which use the service, which drastically reduces how often the tests need to run on each browser instance.
 
 You get runtime feature tests in each of your users' browsers, and you can use those tests results dynamically to serve users the most appropriate code (no more, no less) for their environments.
 
@@ -1030,9 +1032,9 @@ JavaScript engines have to set an arbitrary limit to prevent such programming te
 
 Certain patterns of function calls, called *tail calls*, can be optimized in a way to avoid the extra allocation of stack frames. If the extra allocation can be avoided, there's no reason to arbitrarily limit the call stack depth, so the engines can let them run unbounded.
 
-It's important to note that this optimization can only be applied in `strict` mode. Yet another reason to always be writing all your code as `strict`!
+A tail call is a `return` statement with a function call, where nothing has to happen after the call except returning its value.
 
-A tail call is a function call in the tail position -- at the end of a function's code path -- where nothing has to happen after the call except (optionally) returning its value along to a previous function invocation.
+This optimization can only be applied in `strict` mode. Yet another reason to always be writing all your code as `strict`!
 
 Here's a function call that is *not* in tail position:
 
@@ -1053,7 +1055,7 @@ bar( 10 );				// 21
 
 `1 + ..` has to be performed after the `foo(x)` call completes, so the state of that `bar(..)` invocation needs to be preserved.
 
-But the following snippet demonstrates calls to `foo(..)` and `bar(..)` where both *are* in tail position, since they're the last thing to happen in their code path (other than the `return`):
+But the following snippet demonstrates calls to `foo(..)` and `bar(..)` where both *are* in tail position, as they're the last thing to happen in their code path (other than the `return`):
 
 ```js
 "use strict";
@@ -1078,19 +1080,19 @@ bar( 15 );				// 32
 
 In this program, `bar(..)` is clearly recursive, but `foo(..)` is just a regular function call. In both cases, the function calls are in *proper tail position*. The `x + 1` is evaluated before the `bar(..)` call, and whenever that call finishes, all that happens is the `return`.
 
-Proper tail calls of these forms can be optimized -- called tail call optimization (TCO) -- so that the stack frame allocation is unnecessary. Instead of creating a new stack frame for the next function call, the engine just reuses the existing stack frame. That works because a tail call doesn't need to preserve any of the current state since nothing happens with that state after the tail call.
+Proper Tail Calls (PTC) of these forms can be optimized -- called tail call optimization (TCO) -- so that the extra stack frame allocation is unnecessary. Instead of creating a new stack frame for the next function call, the engine just reuses the existing stack frame. That works because a function doesn't need to preserve any of the current state, as nothing happens with that state after the PTC.
 
 TCO means there's practically no limit to how deep the call stack can be. That trick slightly improves regular function calls in normal programs, but more importantly opens the door to using recursion for program expression even if the call stack could be tens of thousands of calls deep.
 
-**We're no longer restricted from theorizing about recursion** for problem solving, but can actually use it in real JavaScript programs!
+We're no longer relegated to simply theorizing about recursion for problem solving, but can actually use it in real JavaScript programs!
 
-As of ES6, all proper tail calls should be optimized in this way, recursion or not.
+As of ES6, all PTC should be optimizable in this way, recursion or not.
 
 ### Tail Call Rewrite
 
-The hitch however is that only tail calls can be optimized; non-tail calls will still work of course, but will cause stack frame allocation as they always did. You'll have to be careful about structuring your functions with tail calls if you expect the optimizations to kick in.
+The hitch, however, is that only PTC can be optimized; non-PTC will still work of course, but will cause stack frame allocation as they always did. You'll have to be careful about structuring your functions with PTC if you expect the optimizations to kick in.
 
-If you have a function that's not written with proper tail calls, you may find the need to manually optimize your program by rewriting it, so that the engine will be able to apply TCO when running it.
+If you have a function that's not written with PTC, you may find the need to manually rearrange your code to be eligible for TCO.
 
 Consider:
 
@@ -1105,9 +1107,9 @@ function foo(x) {
 foo( 123456 );			// RangeError
 ```
 
-The call to `foo(x-1)` isn't a proper tail call since its result has to be added to `(x / 2)` before `return`ing.
+The call to `foo(x-1)` isn't a PTC because its result has to be added to `(x / 2)` before `return`ing.
 
-However, we can reorganize this code to be eligible for TCO in an ES6 engine as:
+However, to make this code eligible for TCO in an ES6 engine, we can rewrite it as follows:
 
 ```js
 "use strict";
@@ -1132,7 +1134,7 @@ If you run the previous snippet in an ES6 engine that implements TCO, you'll get
 
 There are other techniques to rewrite the code so that the call stack isn't growing with each call.
 
-One such technique is called *trampolining*, which amounts to having each partial result represented as a function that either returns a another partial result function or the final result. Then you can simply loop until you stop getting a function, and you'll have the result. Consider:
+One such technique is called *trampolining*, which amounts to having each partial result represented as a function that either returns another partial result function or the final result. Then you can simply loop until you stop getting a function, and you'll have the result. Consider:
 
 ```js
 "use strict";
@@ -1162,10 +1164,10 @@ foo( 123456 );			// 3810376848.5
 
 This reworking required minimal changes to factor out the recursion into the loop in `trampoline(..)`:
 
-1. First, we wrapped the `return _foo ..` line in the `partial()` function expression.
+1. First, we wrapped the `return _foo ..` line in the `return partial() { ..` function expression.
 2. Then we wrapped the `_foo(1,x)` call in the `trampoline(..)` call.
 
-The reason this technique doesn't suffer the call stack limitiation is that each of those inner `partial(..)` functions is just returned back to the `while` loop in `trampoline(..)`, which runs it and then loop iterates again. In other words, `partial(..)` doesn't recursively call itself, it just returns another function. The stack depth remains constant, so it can run as long as it needs to.
+The reason this technique doesn't suffer the call stack limitation is that each of those inner `partial(..)` functions is just returned back to the `while` loop in `trampoline(..)`, which runs it and then loop iterates again. In other words, `partial(..)` doesn't recursively call itself, it just returns another function. The stack depth remains constant, so it can run as long as it needs to.
 
 Trampolining expressed in this way uses the closure that the inner `partial()` function has over the `x` and `acc` variables to keep the state from iteration to iteration. The advantage is that the looping logic is pulled out into a reusable `trampoline(..)` utility function, which many libraries provide versions of. You can reuse `trampoline(..)` multiple times in your program with different trampolined algorithms.
 
@@ -1190,18 +1192,16 @@ This expression of the algorithm is simpler to read, and will likely perform the
 
 There are some reasons why you might not want to always manually unroll your recursions:
 
-* Instead of factoring out the trampolining (loop) logic for reusability, we've inlined it. This works great when there's only one example to consider, but as soon as you have a half dozen or more of these in your program, there's a good chance you'll want some reusabilty to keep things manageable.
+* Instead of factoring out the trampolining (loop) logic for reusability, we've inlined it. This works great when there's only one example to consider, but as soon as you have a half dozen or more of these in your program, there's a good chance you'll want some reusability to keep things shorter and more manageable.
 * The example here is deliberately simple enough to illustrate the different forms. In practice, there are many more complications in recursion algorithms, such as mutual recursion (more than just one function calling itself).
 
-   The farther you go down this rabbit hole, the more manual and intricate the *unrolling* optimizations are. You'll quickly lose all the perceived value of readability. The primary advantage of recursion, even in the *proper tail call* form, is that it preserves the algorithm readability, and offloads the performance optimization to the engine.
+   The farther you go down this rabbit hole, the more manual and intricate the *unrolling* optimizations are. You'll quickly lose all the perceived value of readability. The primary advantage of recursion, even in the PTC form, is that it preserves the algorithm readability, and offloads the performance optimization to the engine.
 
-If you write your algorithms with proper tail calls, the ES6 engine will apply TCO to let your code run in constant stack depth (by reusing stack frames). You get the readability of recursion with most of the performance benefits and no limitations of run length.
+If you write your algorithms with PTC, the ES6 engine will apply TCO to let your code run in constant stack depth (by reusing stack frames). You get the readability of recursion with most of the performance benefits and no limitations of run length.
 
 ### Meta?
 
-So TCO is cool, right? But what does any of this have to do with meta programming? Great question. You're totally right to ask that!
-
-Short answer: I'm stretching the definition of "meta programming" to fit the TCO topic into this chapter.
+What does TCO have to do with meta programming?
 
 As we covered in the "Feature Testing" section earlier, you can determine at runtime what features an engine supports. This includes TCO, though determining it is quite brute force. Consider:
 
@@ -1210,7 +1210,7 @@ As we covered in the "Feature Testing" section earlier, you can determine at run
 
 try {
 	(function foo(x){
-		if (x < 5E5) foo( x + 1 );
+		if (x < 5E5) return foo( x + 1 );
 	})( 1 );
 
 	TCO_ENABLED = true;
@@ -1220,9 +1220,13 @@ catch (err) {
 }
 ```
 
+In a non-TCO engine, the recursive loop will fail out eventually, throwing an exception caught by the `try..catch`. Otherwise, the loop completes easily thanks to TCO.
+
 Yuck, right?
 
-But how could meta programming around the TCO feature (or rather, the lack thereof) benefit our code? The simple answer is that you could use such a feature test to decide to load a version of your application's code that uses recursion, or an alternate one that's been converted/transpiled to not need recursion.
+But how could meta programming around the TCO feature (or rather, the lack thereof) benefit our code? The simple answer is that you could use such a feature test to decide to load a version of your application's code that uses recursion, or an alternative one that's been converted/transpiled to not need recursion.
+
+#### Self-Adjusting Code
 
 But here's another way of looking at the problem:
 
@@ -1234,7 +1238,7 @@ function foo(x) {
 		if (x > 1) {
 			acc = acc + (x / 2);
 			x = x - 1;
-			_foo();
+			return _foo();
 		}
 	}
 
@@ -1255,7 +1259,7 @@ foo( 123456 );			// 3810376848.5
 
 This algorithm works by attempting to do as much of the work with recursion as possible, but keeping track of the progress via scoped variables `x` and `acc`. If the entire problem can be solved with recursion without an error, great. If the engine kills the recursion at some point, we simply catch that with the `try..catch` and then try again, picking up where we left off.
 
-I consider this a form of meta programming in that you are probing during runtime the ability of the engine to fully (recursively) finish the task, and working around any engine limitations (non-TCO) that may restrict you.
+I consider this a form of meta programming in that you are probing during runtime the ability of the engine to fully (recursively) finish the task, and working around any (non-TCO) engine limitations that may restrict you.
 
 At first (or even second!) glance, my bet is this code seems much uglier to you compared to some of the earlier versions. It also runs a fair bit slower (on larger runs in a non-TCO environment).
 
@@ -1265,7 +1269,9 @@ Essentially, `_foo()` in this case is a sort of stand-in for practically any rec
 
 The only "catch" is that to be able to resume in the event of a recursion limit being hit, the state of the recursion must be in scoped variables that exist outside the recursive function(s). We did that by leaving `x` and `acc` outside of the `_foo()` function, instead of passing them as arguments to `_foo()` as earlier.
 
-This approach still uses a proper tail call, meaning that this code will "progressively enhance" from running using the loop many times (recursion batches) in an older browser to fully leveraging TCO'd recursion in an ES6+ environment. I think that's pretty cool!
+Almost any recursive algorithm can be adapted to work this way. That means it's the most widely applicable way of leveraging TCO with recursion in your programs, with minimal rewriting.
+
+This approach still uses a PTC, meaning that this code will *progressively enhance* from running using the loop many times (recursion batches) in an older browser to fully leveraging TCO'd recursion in an ES6+ environment. I think that's pretty cool!
 
 ## Review
 
@@ -1275,6 +1281,6 @@ Prior to ES6, JavaScript already had quite a bit of meta programming capability,
 
 From function name inferences for anonymous functions to meta properties that give you information about things like how a constructor was invoked, you can inspect the program structure while it runs more than ever before. Well Known Symbols let you override intrinsic behaviors, such as coercion of an object to a primitive value. Proxies can intercept and customize various low-level operations on objects, and `Reflect` provides utilities to emulate them.
 
-Feature testing, even for subtle semantic behaviors like Proper Tail Call optimizations, shifts the meta programming focus from your program to the JS engine capabilities itself. By knowing more about what the environment can do, your programs can adjust themselves to the best fit as they run.
+Feature testing, even for subtle semantic behaviors like Tail Call Optimization, shifts the meta programming focus from your program to the JS engine capabilities itself. By knowing more about what the environment can do, your programs can adjust themselves to the best fit as they run.
 
 Should you meta program? My advice is: first focus on learning how the core mechanics of the language really work. But once you fully know what JS itself can do, it's time to start leveraging these powerful meta programming capabilities to push the language further!

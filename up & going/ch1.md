@@ -219,7 +219,7 @@ If that same employee picks up another similar phone but says it's "free" (perha
 
 When you later ask if the phone includes a charger, that answer could only have been either "yes" or "no."
 
-In very similar ways, when you express values in a programs, you choose different representations for those values based on what you plan to do with them.
+In very similar ways, when you express values in a program, you choose different representations for those values based on what you plan to do with them.
 
 These different representations for values are called *types* in programming terminology. JavaScript has built-in types for each of these so called *primitive* values:
 
@@ -786,7 +786,7 @@ Learning programming doesn't have to be a complex and overwhelming process. Ther
 
 These act like building blocks. To build a tall tower, you start first by putting block on top of block on top of block. The same goes with programming. Here are some of the essential programming building blocks:
 
-* You need *operators* to perform actions on
+* You need *operators* to perform actions on values.
 * You need values and *types* to perform different kinds of actions like math on `number`s or output with `string`s.
 * You need *variables* to store data (aka *state*) during your program's execution.
 * You need *conditionals* like `if` statements to make decisions.

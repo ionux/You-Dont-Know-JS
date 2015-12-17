@@ -214,7 +214,7 @@ These questions and answers -- the two-way message passing with `yield` and `nex
 
 ### Multiple Iterators
 
-It may appear from the syntactic usage that when you use an *iterator* to control a generator, you're controlling the declared generator function itself. But there's a subtlety that easy to miss: each time you construct an *iterator*, you are implicitly constructing an instance of the generator which that *iterator* will control.
+It may appear from the syntactic usage that when you use an *iterator* to control a generator, you're controlling the declared generator function itself. But there's a subtlety that's easy to miss: each time you construct an *iterator*, you are implicitly constructing an instance of the generator which that *iterator* will control.
 
 You can have multiple instances of the same generator running at the same time, and they can even interact:
 
@@ -757,7 +757,7 @@ Take a step back and consider the implications. We have totally synchronous-look
 
 **That's huge!** That's a nearly perfect solution to our previously stated problem with callbacks not being able to express asynchrony in a sequential, synchronous fashion that our brains can relate to.
 
-In essence, we are abstracting the asynchrony away as an implementation detail, so that we can reason synchronously/sequentially about our flow control: "Make an Ajax request, and when it finishes print out the response." And of course, we just expressed two steps in the flow control, but this same capabililty extends without bounds, to let us express however many steps we need to.
+In essence, we are abstracting the asynchrony away as an implementation detail, so that we can reason synchronously/sequentially about our flow control: "Make an Ajax request, and when it finishes print out the response." And of course, we just expressed two steps in the flow control, but this same capability extends without bounds, to let us express however many steps we need to.
 
 **Tip:** This is such an important realization, just go back and read the last three paragraphs again to let it sink in!
 
@@ -1600,8 +1600,8 @@ function *reqData(url) {
 var it1 = reqData( "http://some.url.1" );
 var it2 = reqData( "http://some.url.2" );
 
-var p1 = it.next();
-var p2 = it.next();
+var p1 = it1.next();
+var p2 = it2.next();
 
 p1.then( function(data){
 	it1.next( data );
@@ -2175,7 +2175,7 @@ function foo(url) {
 
 How does this code work?
 
-1. The first call to the *iterator*'s `next()` call would move the generator from the unitialized state to state `1`, and then call `process()` to handle that state. The return value from `request(..)`, which is the promise for the Ajax response, is returned back as the `value` property from the `next()` call.
+1. The first call to the *iterator*'s `next()` call would move the generator from the uninitialized state to state `1`, and then call `process()` to handle that state. The return value from `request(..)`, which is the promise for the Ajax response, is returned back as the `value` property from the `next()` call.
 2. If the Ajax request succeeds, the second call to `next(..)` should send in the Ajax response value, which moves our state to `2`. `process(..)` is again called (this time with the passed in Ajax response value), and the `value` property returned from `next(..)` will be `undefined`.
 3. However, if the Ajax request fails, `throw(..)` should be called with the error, which would move the state from `1` to `3` (instead of `2`). Again `process(..)` is called, this time with the error value. That `case` returns `false`, which is set as the `value` property returned from the `throw(..)` call.
 
